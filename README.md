@@ -9,7 +9,7 @@ Example 1: Crawl web pages from Internet
 ```Java
 import drawler.crawl.Drawler;
 
-public class HelloCrawler {
+public class HelloCrawler throws Exception {
 
 	public static void main(String args[]) {
 		
