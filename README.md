@@ -25,9 +25,9 @@ public class HelloCrawler throws Exception {
 		};
 		
 		// Add the URL regex that want to scan for more links
-		drawler.urlScan.add("http://www\\.dianping\\.com/member/[0-9]+/reviews\\?pg=[0-9]+&reviewCityId=0&reviewShopType=10&c=0&shopTypeIndex=1");
+		drawler.urlScan.add("http://www\\.dianping\\.com/member/[0-9]+/reviews\\?pg=[0-9]+&reviewCityId=0&reviewShopType=0&c=0&shopTypeIndex=0");
 		// Add the URL regex that want to download
-		drawler.urlDownload.add("http://www\\.dianping\\.com/member/[0-9]+/reviews\\?pg=[0-9]+&reviewCityId=0&reviewShopType=10&c=0&shopTypeIndex=1");
+		drawler.urlDownload.add("http://www\\.dianping\\.com/member/[0-9]+/reviews\\?pg=[0-9]+&reviewCityId=0&reviewShopType=0&c=0&shopTypeIndex=0");
 		
 		// Set the scan depth of the drawler
 		drawler.scanDepth = 100;
