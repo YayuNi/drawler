@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<project name="drawler" default="compile" basedir=".">
+	
+	<target name="compile">
+		<mkdir dir="${basedir}/build/classes"/>
+		<javac srcdir="${basedir}/src" 
+		       destdir="${basedir}/build/classes"
+		       deprecation="on"
+		       nowarn="off">
+			<compilerarg value="-Xinit:unchecked" />
+			<classpath>
+				<fileset dir="${basedir}/lib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="run-crawl">
+		<java classname="Crawl" fork="true">
+			<classpath>
+				<pathelement path="${basedir}/build/classes"/>
+			</classpath>
+		</java>
+	</target>
+
+	<target name="run-match">
+		<java classname="Match" fork="true">
+			<classpath>
+				<pathelement path="${basedir}/build/classes"/>
+			</classpath>
+		</java>
+	</target>
+</project>
