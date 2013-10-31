@@ -154,9 +154,9 @@ public class SQLOutput implements Outputable {
 		
 		try {
 			Statement state = con.createStatement();
-			boolean r = state.execute("CREATE DATABASE " + database + " CHARACTER SET `utf8`");
+			state.execute("CREATE DATABASE " + database + " CHARACTER SET `utf8`");
 			state.close();
-			return r;
+			return true;
 		}
 		catch (SQLException e) {
 			System.err.println(e.toString());
