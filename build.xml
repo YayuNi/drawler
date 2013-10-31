@@ -8,7 +8,7 @@
 		       destdir="${basedir}/build/classes"
 		       deprecation="on"
 		       nowarn="off">
-			<compilerarg value="-Xinit:unchecked" />
+			<compilerarg value="-Xlint:unchecked" />
 			<classpath>
 				<fileset dir="${basedir}/lib">
 					<include name="*.jar" />
