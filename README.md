@@ -47,7 +47,7 @@ public class HelloCrawler {
 		
 		// Start the crawler
 		for (String url : startURLs)
-			drawler.followLink(startURL);
+			drawler.followLink(url);
 	}
 	
 }
