@@ -19,17 +19,23 @@
 	</target>
 
 	<target name="run-crawl">
-		<java classname="Crawl" fork="true">
+		<java classname="examples.XinLe.Crawl" fork="true">
 			<classpath>
 				<pathelement path="${basedir}/build/classes"/>
+				<fileset dir="${basedir}/lib">
+					<include name="*.jar" />
+				</fileset>
 			</classpath>
 		</java>
 	</target>
 
 	<target name="run-match">
-		<java classname="Match" fork="true">
+		<java classname="examples.XinLe.Match" fork="true">
 			<classpath>
 				<pathelement path="${basedir}/build/classes"/>
+				<fileset dir="${basedir}/lib">
+					<include name="*.jar" />
+				</fileset>
 			</classpath>
 		</java>
 	</target>
