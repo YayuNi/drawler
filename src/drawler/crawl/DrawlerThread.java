@@ -59,10 +59,8 @@ public class DrawlerThread implements Runnable {
 		}
 
 		// 2.判断是否符合扫描、下载条件
-		contextualURL.scannable = DrawlerUtilities.isScannable(contextualURL, drawler.urlScan);
-		contextualURL.downloadable = DrawlerUtilities.isDownloadable(contextualURL, drawler.urlDownload);
-		if (!drawler.isVisitedLink(contextualURL.url)) {
-			drawler.addVisitedLink(contextualURL.url);
+		if (!drawler.isVisitedLink(contextualURL)) {
+			drawler.addVisitedLink(contextualURL);
 		}
 		
 		// 3.扫描文件，将符合浏览要求的URL加入队列
@@ -152,8 +150,7 @@ public class DrawlerThread implements Runnable {
 
 				// 保存新找到的链接信息，是否可继续浏览，是否可下载
 				int linkscandepth = contextualURL.scanDepth;
-				ContextualURL newcontextualURL = new ContextualURL(
-						contextualURL.url, linkurl, linkscandepth + 1);
+				ContextualURL newcontextualURL = new ContextualURL(linkurl, linkscandepth + 1);
 				newcontextualURL.originalLink = link;
 				newcontextualURL.scannable = DrawlerUtilities.isScannable(
 						newcontextualURL, drawler.urlScan);
@@ -163,24 +160,22 @@ public class DrawlerThread implements Runnable {
 						&& top < drawler.downloadCount;
 
 				// 是否链接已经浏览过
-				boolean alreadyprocessed = false;
-				if (drawler.isVisitedLink(linkurl)) {
-					alreadyprocessed = true;
-				} else {
-					drawler.addVisitedLink(linkurl);
+				boolean toprocess = false;
+				if ((newcontextualURL.scannable || newcontextualURL.downloadable) 
+					&& !drawler.isVisitedLink(newcontextualURL)) {
+					drawler.addVisitedLink(newcontextualURL);
+					toprocess = true;
 				}
 
 				// 将新地址加入队列
-				if (!alreadyprocessed) { 
-					if (newcontextualURL.scannable || newcontextualURL.downloadable) {
-						String msg = "link found: ";
-						drawler.addQueueLink(newcontextualURL);
-						if (newcontextualURL.downloadable) {
-							msg = "resources found: ";
-							top ++;
-						}
-						System.out.println(msg + linkurl);
+				if (toprocess) { 
+					String msg = "link found: ";
+					drawler.addQueueLink(newcontextualURL);
+					if (newcontextualURL.downloadable) {
+						msg = "resources found: ";
+						top ++;
 					}
+					System.out.println(msg + linkurl);
 				}
 			}
 		}

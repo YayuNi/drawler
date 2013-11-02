@@ -16,13 +16,6 @@ public class ContextualURL {
     public URL url;
 
     /**
-     *  the father URL
-     *
-     *@since    28 novembre 2001
-     */
-    public URL context;
-
-    /**
      *  the number of domain changes since the "homepage"
      *
      *@since    28 novembre 2001
@@ -63,16 +56,23 @@ public class ContextualURL {
     /**
      *  Constructor for the ContextualURL object
      *
-     *@param  context      father url
      *@param  url          url
      *@param  domainDepth
      *@since               28 novembre 2001
      */
-    public ContextualURL(URL context, URL url, int scanDepth) {
-        this.context = context;
+    public ContextualURL(URL url, int scanDepth) {
         this.url = url;
         this.scanDepth = scanDepth;
     }
 
+    public ContextualURL(String url, int scanDepth) throws Exception {
+	this.url = new URL(url);
+	this.scanDepth = scanDepth;
+    }
+
+    @Override
+    public boolean equals(Object e) {
+	return ((ContextualURL)e).url.toString().equals(this.url.toString());
+    }
 }
 

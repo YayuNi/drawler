@@ -24,11 +24,11 @@ public class Drawler {
     
     // 已访问队列
     private Object visitedURLLock;
-    private List visitedUrls;
+    private Queue<ContextualURL> visitedUrls;
     
     // 待访问队列
     private Object queuedURLLock;
-    private List queuedUrls;
+    private Queue<ContextualURL> queuedUrls;
     
     // 结果统计
     private Object writtenResultLock;
@@ -47,8 +47,6 @@ public class Drawler {
 
     public Drawler() throws Exception {
 
-        visitedUrls = new LinkedList();
-        queuedUrls = new LinkedList();
 	maxThreads = 1;
         threads = new HashSet(32);
         threadGroup = new ThreadGroup("Drawler threads");
@@ -68,17 +66,31 @@ public class Drawler {
         isPaused = false;
 
 	isEnd = false;
+
+	// By default, we use LinkedList as URLQueue
+	visitedUrls = new LinkedList<ContextualURL>();
+	queuedUrls = new LinkedList<ContextualURL>();
+    }
+
+    public void setVisitedURLCache(Queue<ContextualURL> queue) {
+	this.visitedUrls = queue;
+    }
+
+    public void setQueueURLCache(Queue<ContextualURL> queue) {
+	this.queuedUrls = queue;
     }
 
     // 抓取一个URL
     public void followLink(ContextualURL contextualURL) {
-        queuedUrls.add(contextualURL);
+	contextualURL.scannable = true;
+	contextualURL.downloadable = DrawlerUtilities.isDownloadable(contextualURL, urlDownload);
+	queuedUrls.offer(contextualURL);
         startThread();
     }
 
     public void followLink(String url) throws Exception {
 	URL u = new URL(url);
-	ContextualURL contextualurl = new ContextualURL(u, u, 1);
+	ContextualURL contextualurl = new ContextualURL(u, 1);
 	followLink(contextualurl);
     }
 
@@ -134,21 +146,21 @@ public class Drawler {
     }
 
     // 加锁的变量访问函数，防止多线程中数据错误
-    public void addVisitedLink(URL link) {
+    public void addVisitedLink(ContextualURL link) {
     	synchronized(visitedURLLock) {
-    		visitedUrls.add(link);
+    		visitedUrls.offer(link);
     	}
     }
     
-    public boolean isVisitedLink(URL link) {
+    public boolean isVisitedLink(ContextualURL link) {
     	synchronized(visitedURLLock) {
-    		return visitedUrls.contains(link);
+    		return this.visitedUrls.contains(link);
     	}
     }
     
     public void addQueueLink(ContextualURL contextualURL) {
     	synchronized(queuedURLLock) {
-    		queuedUrls.add(contextualURL);
+    		queuedUrls.offer(contextualURL);
     	}
     }
     
@@ -160,7 +172,7 @@ public class Drawler {
     
     public ContextualURL popQueuedURL() {
     	synchronized(queuedURLLock) {
-    		return (ContextualURL)queuedUrls.remove(0);
+    		return (ContextualURL)queuedUrls.poll();
     	}
     }
     

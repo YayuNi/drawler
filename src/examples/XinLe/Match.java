@@ -6,7 +6,7 @@ import drawler.match.sql.SQLOutput;
 import drawler.match.pattern.Filter;
 import drawler.match.pattern.html.HTMLPattern;
 
-public class HelloMatcher {
+public class Match {
 
     public static void main(String[] args) {
 
@@ -20,8 +20,13 @@ public class HelloMatcher {
 
         // The mysql output obejct. Can be expanded to other outputer, like file system.
         // The arguments are: database URL, user name, password, database name, table name
-        SQLOutput output = new SQLOutput("localhost", "root", "root", "www_dianping_com", "peoples");
+        SQLOutput output = new SQLOutput("localhost", "root", "root", "www_dianping_com", "members");
         matcher.setOutput(output);
+
+	matcher.addPattern("userID", "INT", new HTMLPattern(
+		"\"/msg/send/",
+		"[0-9]+",
+		"\""));
 
         matcher.addPattern("shopID", "INT", new HTMLPattern(
             "<a href=\"http://www.dianping.com/shop/",
@@ -43,13 +48,13 @@ public class HelloMatcher {
             "[0-9]",
             "<em class"));
 
-        matcher.addPattern("comment", "VARCHAR(1000)", new HTMLPattern(
+        matcher.addPattern("comment", "TEXT", new HTMLPattern(
             "<div class=\"mode-tc comm-entry\">",
             ".*?",
             "</div>",
             new Filter() {
                 public String filter(String content) {
-                    return content.replace("<br/>","");
+                    return content.replace("<br/>","").replace("<br>","").replace("&nbsp;","");
                 }
             }));
 
